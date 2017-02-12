@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+<% for(var i = 0; i < Entities.length; i++){ %><Compile Include="DTO\<%= Entities[i] %>Dto.cs" /><% } %>
     <Compile Include="DTO\ExampleDto.cs" />
     <Compile Include="Exceptions\EntityException.cs" />
     <Compile Include="Exceptions\EntityNotFoundException.cs" />
@@ -57,8 +58,10 @@
     <Compile Include="Infrastructure\AutomapperRegistration\EntityToDtoProfile.cs" />
     <Compile Include="Infrastructure\ServiceModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+<% for(var i = 0; i < Entities.length; i++){ %><Compile Include="Interfaces\I<%= Entities[i] %>Service.cs" /><% } %>
     <Compile Include="Interfaces\IExampleService.cs" />
     <Compile Include="Services\ExampleService.cs" />
+<% for(var i = 0; i < Entities.length; i++){ %><Compile Include="Services\<%= Entities[i] %>Service.cs" /><% } %>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

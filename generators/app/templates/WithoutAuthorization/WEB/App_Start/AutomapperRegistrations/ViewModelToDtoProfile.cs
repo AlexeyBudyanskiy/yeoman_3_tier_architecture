@@ -9,6 +9,9 @@ namespace <%= SolutionName %>.WEB.AutomapperRegistrations
         public ViewModelToDtoProfile()
         {
             CreateMap<ExampleViewModel, ExampleDto>();
+<% for(var i = 0; i < Entities.length; i++){ %>
+			CreateMap<<%= Entities[i] %>ViewModel, <%= Entities[i] %>Dto>();
+<% } %>
         }
     }
 }

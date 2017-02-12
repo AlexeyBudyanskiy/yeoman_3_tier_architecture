@@ -52,6 +52,7 @@
     <Compile Include="EF\DatabaseContext.cs" />
     <Compile Include="EF\StoreDbInitializer.cs" />
     <Compile Include="Entities\BaseType.cs" />
+    <% for(var i = 0; i < Entities.length; i++){ %><Compile Include="Entities\<%= Entities[i] %>.cs" /><% } %>
     <Compile Include="Entities\Example.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
     <Compile Include="Interfaces\IUnitOfWork.cs" />

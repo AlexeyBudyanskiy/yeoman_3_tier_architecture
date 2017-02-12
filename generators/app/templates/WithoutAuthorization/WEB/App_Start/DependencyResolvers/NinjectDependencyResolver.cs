@@ -30,6 +30,9 @@ namespace <%= SolutionName %>.WEB.DependencyResolvers
         private void AddBindings()
         {
             _kernel.Bind<IExampleService>().To<ExampleService>();
+<% for(var i = 0; i < Entities.length; i++){ %>
+			_kernel.Bind<I<%= Entities[i] %>Service>().To<<%= Entities[i] %>Service>();
+<% } %>
 
             _kernel.Bind<ILogger>().ToMethod(p =>
             {

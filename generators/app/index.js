@@ -20,12 +20,18 @@ module.exports = Generator.extend({
       name: 'serverPort',
       message: 'Insert the port of the server',
       default: "5001"
+    },{
+      type: 'input',
+      name: 'entitiesString',
+      message: 'Insert entities separated by comas'
     }
     ];
 
     return this.prompt(prompts).then(function (props) {
       // To access props later use this.props.someAnswer;
       this.props = props;
+      var entitiesArray = this.props.entitiesString.replace(/\s/g, '').split(',');
+      this.props.entitiesArray = entitiesArray;
     }.bind(this));
   },
 
@@ -49,31 +55,19 @@ module.exports = Generator.extend({
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/DAL/EF/_DatabaseContext.cs'),
+      this.templatePath('WithoutAuthorization/DAL/EF'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
         + this.props.solutionName 
         + ".DAL/"
-        + "EF/"
-        + "DatabaseContext.cs"),
-      { SolutionName: this.props.solutionName }
+        + "EF"),
+      { SolutionName: this.props.solutionName,
+        Entities: this.props.entitiesArray }
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/DAL/EF/_StoreDbInitializer.cs'),
-      this.destinationPath(
-        this.props.solutionName 
-        + "/" 
-        + this.props.solutionName 
-        + ".DAL/"
-        + "EF/"
-        + "StoreDbInitializer.cs"),
-      { SolutionName: this.props.solutionName }
-    );
-
-    this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/DAL/Entities/_BaseType.cs'),
+      this.templatePath('WithoutAuthorization/DAL/Entities/BaseType.cs'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
@@ -85,7 +79,7 @@ module.exports = Generator.extend({
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/DAL/Entities/_Example.cs'),
+      this.templatePath('WithoutAuthorization/DAL/Entities/Example.cs'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
@@ -95,6 +89,22 @@ module.exports = Generator.extend({
         + "Example.cs"),
       { SolutionName: this.props.solutionName }
     );
+
+    for(var i = 0; i < this.props.entitiesArray.length; i++){
+      this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/DAL/Entities/_Template.cs'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/" 
+        + this.props.solutionName 
+        + ".DAL/"
+        + "Entities/"
+        + this.props.entitiesArray[i]
+        + ".cs"),
+      { SolutionName: this.props.solutionName,
+        Entity: this.props.entitiesArray[i]}
+    );
+    }
 
 /*    this.fs.copy(
       this.templatePath('WithoutAuthorization/DAL/Exceptions'),
@@ -117,67 +127,53 @@ module.exports = Generator.extend({
     ); */
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/DAL/Interfaces/_IRepository.cs'),
+      this.templatePath('WithoutAuthorization/DAL/Interfaces'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
         + this.props.solutionName 
         + ".DAL/"
-        + "Interfaces/"
-        + "IRepository.cs"),
-      { SolutionName: this.props.solutionName }
+        + "Interfaces"),
+      { SolutionName: this.props.solutionName,
+        Entities: this.props.entitiesArray }
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/DAL/Interfaces/_IUnitOfWork.cs'),
+      this.templatePath('WithoutAuthorization/DAL/Properties'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
         + this.props.solutionName 
         + ".DAL/"
-        + "Interfaces/"
-        + "IUnitOfWork.cs"),
+        + "Properties"),
       { SolutionName: this.props.solutionName }
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/DAL/Properties/_AssemblyInfo.cs'),
+      this.templatePath('WithoutAuthorization/DAL/Repositories'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
         + this.props.solutionName 
         + ".DAL/"
-        + "Properties/"
-        + "AssemblyInfo.cs"),
+        + "Repositories"),
       { SolutionName: this.props.solutionName }
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/DAL/Repositories/_CommonRepository.cs'),
+      this.templatePath('WithoutAuthorization/DAL/UnitsOfWork'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
         + this.props.solutionName 
         + ".DAL/"
-        + "Repositories/"
-        + "CommonRepository.cs"),
-      { SolutionName: this.props.solutionName }
+        + "UnitsOfWork"),
+      { SolutionName: this.props.solutionName,
+        Entities: this.props.entitiesArray }
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/DAL/UnitsOfWork/_UnitOfWork.cs'),
-      this.destinationPath(
-        this.props.solutionName 
-        + "/" 
-        + this.props.solutionName 
-        + ".DAL/"
-        + "UnitsOfWork/"
-        + "UnitOfWork.cs"),
-      { SolutionName: this.props.solutionName }
-    );
-
-    this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/DAL/_App.config'),
+      this.templatePath('WithoutAuthorization/DAL/App.config'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
@@ -188,7 +184,7 @@ module.exports = Generator.extend({
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/DAL/_packages.config'),
+      this.templatePath('WithoutAuthorization/DAL/packages.config'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
@@ -207,26 +203,31 @@ module.exports = Generator.extend({
         + ".DAL/"
         + this.props.solutionName
         + ".DAL.csproj"),
-      { SolutionName: this.props.solutionName }
+      { SolutionName: this.props.solutionName,
+        Entities: this.props.entitiesArray }
     );
-
- /*this.fs.copy(
-      this.templatePath('WithoutAuthorization/DAL/SolutionName'),
-      this.destinationPath(
-        this.props.solutionName 
-        + "/" 
-        + this.props.solutionName 
-        + ".DAL/"
-        + this.props.solutionName
-        + ".DAL.csproj.user")
-    );*/
 
     /* <-- DAL */
 
     /* BLL --> */
+    for(var i = 0; i < this.props.entitiesArray.length; i++){
+      this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/BLL/DTO/_TemplateDto.cs'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/" 
+        + this.props.solutionName 
+        + ".BLL/"
+        + "DTO/"
+        + this.props.entitiesArray[i]
+        + "Dto.cs"),
+      { SolutionName: this.props.solutionName,
+        Entity: this.props.entitiesArray[i]}
+    );
+    }
 
 this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/BLL/DTO/_ExampleDto.cs'),
+      this.templatePath('WithoutAuthorization/BLL/DTO/ExampleDto.cs'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
@@ -238,91 +239,30 @@ this.fs.copyTpl(
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/BLL/Exceptions/_EntityException.cs'),
+      this.templatePath('WithoutAuthorization/BLL/Exceptions'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
         + this.props.solutionName 
         + ".BLL/"
-        + "Exceptions/"
-        + "EntityException.cs"),
+        + "Exceptions"),
       { SolutionName: this.props.solutionName }
+    );
+  
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/BLL/Infrastructure'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/" 
+        + this.props.solutionName 
+        + ".BLL/"
+        + "Infrastructure"),
+      { SolutionName: this.props.solutionName,
+        Entities: this.props.entitiesArray }
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/BLL/Exceptions/_EntityNotFoundException.cs'),
-      this.destinationPath(
-        this.props.solutionName 
-        + "/" 
-        + this.props.solutionName 
-        + ".BLL/"
-        + "Exceptions/"
-        + "EntityNotFoundException.cs"),
-      { SolutionName: this.props.solutionName }
-    );
-
-    this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/BLL/Exceptions/_UniqueValueAlreadyExistsException.cs'),
-      this.destinationPath(
-        this.props.solutionName 
-        + "/" 
-        + this.props.solutionName 
-        + ".BLL/"
-        + "Exceptions/"
-        + "UniqueValueAlreadyExistsException.cs"),
-      { SolutionName: this.props.solutionName }
-    );
-
-    this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/BLL/Exceptions/_ValidationException.cs'),
-      this.destinationPath(
-        this.props.solutionName 
-        + "/" 
-        + this.props.solutionName 
-        + ".BLL/"
-        + "Exceptions/"
-        + "ValidationException.cs"),
-      { SolutionName: this.props.solutionName }
-    );
-
-    this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/BLL/Infrastructure/_ServiceModule.cs'),
-      this.destinationPath(
-        this.props.solutionName 
-        + "/" 
-        + this.props.solutionName 
-        + ".BLL/"
-        + "Infrastructure/"
-        + "ServiceModule.cs"),
-      { SolutionName: this.props.solutionName }
-    );
-
-    this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/BLL/Infrastructure/AutomapperRegistration/_DtoToEntityProfile.cs'),
-      this.destinationPath(
-        this.props.solutionName 
-        + "/" 
-        + this.props.solutionName 
-        + ".BLL/"
-        + "Infrastructure/AutomapperRegistration/"
-        + "DtoToEntityProfile.cs"),
-      { SolutionName: this.props.solutionName }
-    );
-
-     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/BLL/Infrastructure/AutomapperRegistration/_EntityToDtoProfile.cs'),
-      this.destinationPath(
-        this.props.solutionName 
-        + "/" 
-        + this.props.solutionName 
-        + ".BLL/"
-        + "Infrastructure/AutomapperRegistration/"
-        + "EntityToDtoProfile.cs"),
-      { SolutionName: this.props.solutionName }
-    );
-
-    this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/BLL/Interfaces/_IExampleService.cs'),
+      this.templatePath('WithoutAuthorization/BLL/Interfaces/IExampleService.cs'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
@@ -333,20 +273,35 @@ this.fs.copyTpl(
       { SolutionName: this.props.solutionName }
     );
 
-    this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/BLL/Properties/_AssemblyInfo.cs'),
+        for(var i = 0; i < this.props.entitiesArray.length; i++){
+      this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/BLL/Interfaces/_ServiceInterfaceTemplate.cs'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
         + this.props.solutionName 
         + ".BLL/"
-        + "Properties/"
-        + "AssemblyInfo.cs"),
+        + "Interfaces/"
+        + "I" + this.props.entitiesArray[i]
+        + "Service.cs"),
+      { SolutionName: this.props.solutionName,
+        Entity: this.props.entitiesArray[i]}
+    );
+    }
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/BLL/Properties'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/" 
+        + this.props.solutionName 
+        + ".BLL/"
+        + "Properties"),
       { SolutionName: this.props.solutionName }
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/BLL/Services/_ExampleService.cs'),
+      this.templatePath('WithoutAuthorization/BLL/Services/ExampleService.cs'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
@@ -356,6 +311,22 @@ this.fs.copyTpl(
         + "ExampleService.cs"),
       { SolutionName: this.props.solutionName }
     );
+
+    for(var i = 0; i < this.props.entitiesArray.length; i++){
+      this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/BLL/Services/_ServiceTemplate.cs'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/" 
+        + this.props.solutionName 
+        + ".BLL/"
+        + "Services/"
+        + this.props.entitiesArray[i]
+        + "Service.cs"),
+      { SolutionName: this.props.solutionName,
+        Entity: this.props.entitiesArray[i]}
+    );
+    }
 
     this.fs.copy(
       this.templatePath('WithoutAuthorization/BLL/packages.config'),
@@ -377,18 +348,8 @@ this.fs.copyTpl(
         + ".BLL/"
         + this.props.solutionName
         + ".BLL.csproj"),
-      { SolutionName: this.props.solutionName }
-    );
-
- this.fs.copy(
-      this.templatePath('WithoutAuthorization/BLL/SolutionName.txt'),
-      this.destinationPath(
-        this.props.solutionName 
-        + "/" 
-        + this.props.solutionName 
-        + ".BLL/"
-        + this.props.solutionName
-        + ".BLL.csproj.user")
+      { SolutionName: this.props.solutionName,
+        Entities: this.props.entitiesArray }
     );
     /*<-- BLL */
 
@@ -402,7 +363,8 @@ this.fs.copyTpl(
         + this.props.solutionName 
         + ".WEB/App_Start"),
       { SolutionName: this.props.solutionName,
-        ServerPort: this.props.serverPort }
+        ServerPort: this.props.serverPort,
+        Entities: this.props.entitiesArray }
     );
 
     this.fs.copyTpl(
@@ -417,15 +379,42 @@ this.fs.copyTpl(
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/WEB/Controllers'),
+      this.templatePath('WithoutAuthorization/WEB/Controllers/ExampleController.cs'),
       this.destinationPath(
         this.props.solutionName 
         + "/"
         + this.props.solutionName 
-        + ".WEB/Controllers"),
+        + ".WEB/Controllers/ExampleController.cs"),
       { SolutionName: this.props.solutionName,
         ServerPort: this.props.serverPort }
     );
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/Controllers/HomeController.cs'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/"
+        + this.props.solutionName 
+        + ".WEB/Controllers/HomeController.cs"),
+      { SolutionName: this.props.solutionName,
+        ServerPort: this.props.serverPort }
+    );
+
+    for(var i = 0; i < this.props.entitiesArray.length; i++){
+      this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/Controllers/_ControllerTemplate.cs'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/" 
+        + this.props.solutionName 
+        + ".WEB/"
+        + "Controllers/"
+        + this.props.entitiesArray[i]
+        + "Controller.cs"),
+      { SolutionName: this.props.solutionName,
+        Entity: this.props.entitiesArray[i]}
+    );
+    }
 
     this.fs.copyTpl(
       this.templatePath('WithoutAuthorization/WEB/Filters'),
@@ -446,7 +435,8 @@ this.fs.copyTpl(
         + this.props.solutionName 
         + ".WEB/Infrastructure"),
       { SolutionName: this.props.solutionName,
-        ServerPort: this.props.serverPort }
+        ServerPort: this.props.serverPort,
+        Entities: this.props.entitiesArray}
     );
 
     this.fs.copyTpl(
@@ -470,14 +460,30 @@ this.fs.copyTpl(
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/WEB/ViewModels'),
+      this.templatePath('WithoutAuthorization/WEB/ViewModels/ExampleViewModel.cs'),
       this.destinationPath(
         this.props.solutionName 
         + "/"
         + this.props.solutionName 
-        + ".WEB/ViewModels"),
+        + ".WEB/ViewModels/ExampleViewModel.cs"),
       { SolutionName: this.props.solutionName }
     );
+
+    for(var i = 0; i < this.props.entitiesArray.length; i++){
+      this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/ViewModels/_ViewModelTemplate.cs'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/" 
+        + this.props.solutionName 
+        + ".WEB/"
+        + "ViewModels/"
+        + this.props.entitiesArray[i]
+        + "ViewModel.cs"),
+      { SolutionName: this.props.solutionName,
+        Entity: this.props.entitiesArray[i]}
+    );
+    }
 
     this.fs.copyTpl(
       this.templatePath('WithoutAuthorization/WEB/Views'),
@@ -511,7 +517,8 @@ this.fs.copyTpl(
         + this.props.solutionName
         + ".WEB.csproj"),
       { SolutionName: this.props.solutionName,
-        ServerPort: this.props.serverPort }
+        ServerPort: this.props.serverPort,
+        Entities: this.props.entitiesArray }
     );
     /*<-- WEB */
   },

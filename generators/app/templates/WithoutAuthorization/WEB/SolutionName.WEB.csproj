@@ -183,6 +183,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+<% for(var i = 0; i < Entities.length; i++){ %><Compile Include="Controllers\<%= Entities[i] %>Controller.cs" /><% } %>
     <Compile Include="Controllers\ExampleController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Filters\LogActionFilterAttribute.cs" />
@@ -193,6 +194,7 @@
     </Compile>
     <Compile Include="Infrastructure\GlobalVaribles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+<% for(var i = 0; i < Entities.length; i++){ %><Compile Include="ViewModels\<%= Entities[i] %>ViewModel.cs" /><% } %>
     <Compile Include="ViewModels\ExampleViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
