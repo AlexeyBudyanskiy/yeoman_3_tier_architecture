@@ -33,20 +33,9 @@ module.exports = Generator.extend({
 
     /* DAL --> */
 
-
-    /*this.fs.copy(
-      this.templatePath('WithoutAuthorization/.gitignore'),
-      this.destinationPath(this.props.solutionName + "/.gitignore")
-    );*/
-
     this.fs.copy(
       this.templatePath('WithoutAuthorization/README.md'),
       this.destinationPath(this.props.solutionName + "/README.md")
-    );
-
-    this.fs.copy(
-      this.templatePath('WithoutAuthorization/.vs'),
-      this.destinationPath(this.props.solutionName + "/.vs")
     );
 
     this.fs.copyTpl(
@@ -210,7 +199,7 @@ module.exports = Generator.extend({
     );
 
     this.fs.copyTpl(
-      this.templatePath('WithoutAuthorization/DAL/_SolutionName.DAL.csproj'),
+      this.templatePath('WithoutAuthorization/DAL/SolutionNameCsProj'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
@@ -222,7 +211,7 @@ module.exports = Generator.extend({
     );
 
  /*this.fs.copy(
-      this.templatePath('WithoutAuthorization/DAL/_SolutionName.DAL.csproj.user'),
+      this.templatePath('WithoutAuthorization/DAL/SolutionName'),
       this.destinationPath(
         this.props.solutionName 
         + "/" 
@@ -402,6 +391,129 @@ this.fs.copyTpl(
         + ".BLL.csproj.user")
     );
     /*<-- BLL */
+
+    /* WEB -->*/
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/App_Start'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/"
+        + this.props.solutionName 
+        + ".WEB/App_Start"),
+      { SolutionName: this.props.solutionName,
+        ServerPort: this.props.serverPort }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/Content'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/"
+        + this.props.solutionName 
+        + ".WEB/Content"),
+      { SolutionName: this.props.solutionName,
+        ServerPort: this.props.serverPort }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/Controllers'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/"
+        + this.props.solutionName 
+        + ".WEB/Controllers"),
+      { SolutionName: this.props.solutionName,
+        ServerPort: this.props.serverPort }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/Filters'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/"
+        + this.props.solutionName 
+        + ".WEB/Filters"),
+      { SolutionName: this.props.solutionName,
+        ServerPort: this.props.serverPort }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/Infrastructure'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/"
+        + this.props.solutionName 
+        + ".WEB/Infrastructure"),
+      { SolutionName: this.props.solutionName,
+        ServerPort: this.props.serverPort }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/Properties'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/"
+        + this.props.solutionName 
+        + ".WEB/Properties"),
+      { SolutionName: this.props.solutionName }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/Scripts'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/"
+        + this.props.solutionName 
+        + ".WEB/Scripts"),
+      { SolutionName: this.props.solutionName }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/ViewModels'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/"
+        + this.props.solutionName 
+        + ".WEB/ViewModels"),
+      { SolutionName: this.props.solutionName }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/Views'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/"
+        + this.props.solutionName 
+        + ".WEB/Views"),
+      { SolutionName: this.props.solutionName }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/Common'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/"
+        + this.props.solutionName 
+        + ".WEB"),
+      { SolutionName: this.props.solutionName,
+        ServerPort: this.props.serverPort,
+        PercentSymbol: "%" }
+    );
+
+    this.fs.copyTpl(
+      this.templatePath('WithoutAuthorization/WEB/SolutionName.WEB.csproj'),
+      this.destinationPath(
+        this.props.solutionName 
+        + "/"
+        + this.props.solutionName 
+        + ".WEB/"
+        + this.props.solutionName
+        + ".WEB.csproj"),
+      { SolutionName: this.props.solutionName,
+        ServerPort: this.props.serverPort }
+    );
+    /*<-- WEB */
   },
 
   install: function () {

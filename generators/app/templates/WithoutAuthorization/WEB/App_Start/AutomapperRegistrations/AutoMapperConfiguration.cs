@@ -13,7 +13,7 @@ namespace <%= SolutionName %>.WEB.AutomapperRegistrations
                 cfg.AddProfile(new DtoToViewModelProfile());
 
                 cfg.AddProfile(new DtoToEntityProfile());
-                cfg.AddProfile(new EnitityToDtoProfile());
+                cfg.AddProfile(new EntityToDtoProfile());
             });
         }
     }

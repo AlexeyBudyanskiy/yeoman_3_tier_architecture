@@ -17,7 +17,7 @@
                     </p>
                 </div>
                 <div class="card-action">
-                    <a href="@Url.RouteUrl(new {controller = "Example", action = "Edit"})">Edit</a>
+                    <a href="@Url.RouteUrl(new {controller = "Example", action = "Edit", id = example.Id})">Edit</a>
                     <a href="@Url.RouteUrl(new {controller = "Example", action = "Delete", id = example.Id})">Delete</a>
                 </div>
             </div>
