@@ -115,7 +115,7 @@ exports.generateWeb = (context, props) => {
       { SolutionName: props.solutionName }
     );
 
-    for(var i = 0; i < this.props.entitiesArray.length; i++){
+    for(var i = 0; i < props.entitiesArray.length; i++){
       context.fs.copyTpl(
       context.templatePath('WithoutAuthorization/WEB/ViewModels/_ViewModelTemplate.cs'),
       context.destinationPath(
