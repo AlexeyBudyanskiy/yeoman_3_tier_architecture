@@ -1,0 +1,6 @@
+var MikaGenerator = yeoman.generators.Base.extend({
+  config: function() {
+    this.config.set('coffeescript', false);
+    this.config.save()
+  }
+})
